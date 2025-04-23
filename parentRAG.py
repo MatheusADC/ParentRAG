@@ -9,3 +9,14 @@ from langchain.storage import InMemoryStore
 import os
 
 os.environ["OPENAI_API_KEY"] = "your_openai_api_key_here" 
+
+embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+llm = ChatOpenAI(model_name="gpt-3.5-turbo", max_tokens=500)
+
+pdf_link = "your_pdf_link_here" 
+
+loader = PyPDFLoader(pdf_link, extract_images=False)
+
+pages = loader.load_and_split()
+
+len(pages)
