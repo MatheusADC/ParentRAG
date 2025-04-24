@@ -2,6 +2,10 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_community.document_loaders import PyPDFLoader
+from langchain.core.prompts import ChatPromptTemplate
+
+from langchain_core.runnables import RunnablePassthrough, RunnableParallel
+from langchain_core.output_parsers import StrOutputParser
 
 from langchain.retrievers import ParentDocumentRetriever
 from langchain.storage import InMemoryStore
@@ -43,3 +47,20 @@ parent_document_retriever = ParentDocumentRetriever(
 parent_document_retriever.add_documents(pages, ids=None)
 
 parent_document_retriever.vectorstore.get()
+
+TEMPLATE = """
+    Você é um especialista em legislação e tecnologia. Responda a pergunta abaixo utilizando o contexto informado.
+    Query: 
+    {question}
+
+    Context:
+    {context}
+"""
+
+rag_prompt = ChatPromptTemplate.from_template(TEMPLATE)
+
+setup_retrieval = RunnableParallel({"question": RunnablePassthrough(), "context": parent_document_retriever})
+
+output_parser = StrOutputParser()
+
+parent_chain_retrieval = setup_retrieval | rag_prompt | llm | output_parser
