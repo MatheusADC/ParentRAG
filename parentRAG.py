@@ -32,3 +32,14 @@ parent_splitter = RecursiveCharacterTextSplitter(
 
 store = InMemoryStore()
 vectorstore = Chroma(embedding_function=embeddings, persist_directory='childVectorDB')
+
+parent_document_retriever = ParentDocumentRetriever(
+    vectorstore=vectorstore,
+    docstore=store,
+    child_splitter=child_splitter,
+    parent_splitter=parent_splitter
+)
+
+parent_document_retriever.add_documents(pages, ids=None)
+
+parent_document_retriever.vectorstore.get()
