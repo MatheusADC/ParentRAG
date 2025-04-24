@@ -20,3 +20,13 @@ loader = PyPDFLoader(pdf_link, extract_images=False)
 pages = loader.load_and_split()
 
 len(pages)
+
+child_splitter = RecursiveCharacterTextSplitter(
+    chunk_size = 4000,
+    chunk_overlap = 200,
+    length_function = len,
+    add_start_index = True
+)
+
+store = InMemoryStore()
+vectorstore = Chroma(embedding_function=embeddings, persist_directory='childVectorDB')
