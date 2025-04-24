@@ -21,7 +21,9 @@ pages = loader.load_and_split()
 
 len(pages)
 
-child_splitter = RecursiveCharacterTextSplitter(
+child_splitter = RecursiveCharacterTextSplitter(chunk_size = 200)
+
+parent_splitter = RecursiveCharacterTextSplitter(
     chunk_size = 4000,
     chunk_overlap = 200,
     length_function = len,
