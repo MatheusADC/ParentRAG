@@ -64,3 +64,5 @@ setup_retrieval = RunnableParallel({"question": RunnablePassthrough(), "context"
 output_parser = StrOutputParser()
 
 parent_chain_retrieval = setup_retrieval | rag_prompt | llm | output_parser
+
+parent_chain_retrieval.invoke("Quais os principais riscos do marco legal de ia")
